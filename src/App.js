@@ -173,7 +173,6 @@ const App = () => {
     <Mail className="ml-2 h-5 w-5" />
   </button>
 </form>
-          )}
         </div>
       </div>
 
