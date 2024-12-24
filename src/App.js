@@ -1,14 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getBlogPosts } from './contentful';
 import { ArrowRight, Bot, Brain, BarChart, Mail, Menu, X } from 'lucide-react';
 
 const App = () => {
+  // -- Existing states for your menu and form:
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
+  // -- NEW: State for your blog posts
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // -- Existing form submission handler
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
   };
+
+  // -- NEW: Fetch Contentful blog posts after the component mounts
+  useEffect(() => {
+    getBlogPosts()
+      .then((items) => {
+        setPosts(items);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching blog posts:', error);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -19,7 +39,7 @@ const App = () => {
             <div className="text-2xl font-bold text-gray-800">SandlerDigital.ai</div>
             
             {/* Mobile Menu Button */}
-            <button 
+            <button
               className="md:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
@@ -58,8 +78,12 @@ const App = () => {
             Combining expert digital marketing consulting with custom AI solutions to optimize and automate your marketing operations.
           </p>
           <div className="flex justify-center gap-4">
-            <button onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })} 
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 md:px-8 py-3 rounded-lg font-medium text-lg">
+            <button
+              onClick={() =>
+                document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })
+              }
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 md:px-8 py-3 rounded-lg font-medium text-lg"
+            >
               Schedule a Strategy Session
             </button>
           </div>
@@ -155,24 +179,50 @@ const App = () => {
             </p>
           </div>
           
- <form action="https://formspree.io/f/xjkkkowq" method="POST" className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-  <div className="mb-4">
-    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-    <input type="text" id="name" name="name" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"/>
-  </div>
-  <div className="mb-4">
-    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-    <input type="email" id="email" name="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"/>
-  </div>
-  <div className="mb-4">
-    <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Company</label>
-    <input type="text" id="company" name="company" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"/>
-  </div>
-  <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium text-lg flex items-center justify-center">
-    Schedule Strategy Session
-    <Mail className="ml-2 h-5 w-5" />
-  </button>
-</form>
+          <form 
+            action="https://formspree.io/f/xjkkkowq" 
+            method="POST" 
+            onSubmit={handleSubmit}
+            className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+          >
+            <div className="mb-4">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                required 
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                required 
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+              <input 
+                type="text" 
+                id="company" 
+                name="company" 
+                required 
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              />
+            </div>
+            <button 
+              type="submit" 
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium text-lg flex items-center justify-center"
+            >
+              Schedule Strategy Session
+              <Mail className="ml-2 h-5 w-5" />
+            </button>
+          </form>
         </div>
       </div>
 
@@ -184,6 +234,39 @@ const App = () => {
           </div>
         </div>
       </footer>
+
+      {/* NEW: Blog Posts Section (fetched from Contentful) */}
+      <div className="max-w-6xl mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold mb-8 text-center">Latest Blog Posts</h2>
+        {loading && (
+          <div className="text-center">
+            <p className="text-gray-600">Loading blog posts...</p>
+          </div>
+        )}
+
+        {!loading && posts.length === 0 && (
+          <div className="text-center">
+            <p className="text-gray-600">No posts found. Make sure you have published entries in Contentful!</p>
+          </div>
+        )}
+
+        {!loading && posts.map((post) => {
+          // Access your Contentful fields by name (e.g., title, slug, body)
+          const { title, slug, body } = post.fields;
+          return (
+            <article
+              key={post.sys.id}
+              className="bg-white p-6 mb-6 rounded-xl shadow-sm border border-gray-100"
+            >
+              <h3 className="text-xl font-semibold mb-2">{title}</h3>
+              <p className="text-sm text-gray-500 mb-2">Slug: {slug}</p>
+              <div className="text-gray-700 leading-relaxed">
+                {body}
+              </div>
+            </article>
+          );
+        })}
+      </div>
     </div>
   );
 };
