@@ -155,45 +155,24 @@ const App = () => {
             </p>
           </div>
           
-          {formSubmitted ? (
-            <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-xl font-semibold text-green-600 mb-2">Thank You!</h3>
-              <p className="text-gray-600">We'll be in touch with you shortly to schedule your strategy session.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Company</label>
-                <input
-                  type="text"
-                  id="company"
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                />
-              </div>
-              <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium text-lg flex items-center justify-center">
-                Schedule Strategy Session
-                <Mail className="ml-2 h-5 w-5" />
-              </button>
-            </form>
+ <form action="https://formspree.io/f/xjkkkowq" method="POST" className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+  <div className="mb-4">
+    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+    <input type="text" id="name" name="name" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"/>
+  </div>
+  <div className="mb-4">
+    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+    <input type="email" id="email" name="email" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"/>
+  </div>
+  <div className="mb-4">
+    <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+    <input type="text" id="company" name="company" required className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"/>
+  </div>
+  <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium text-lg flex items-center justify-center">
+    Schedule Strategy Session
+    <Mail className="ml-2 h-5 w-5" />
+  </button>
+</form>
           )}
         </div>
       </div>
